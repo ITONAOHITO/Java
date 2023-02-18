@@ -12,11 +12,11 @@ public class Task1_4{
         String name = "aiueo";
         String pass = "alice123";
 
-        if (USER_NAME == name && USER_PASSWORD == pass) {
+        if (name.equals(USER_NAME) && pass.equals(USER_PASSWORD)) {
             System.out.println(CONST_MSG_SUCCESS);
-        }   else if (USER_NAME == name) {
+        }   else if (name.equals(USER_NAME)) {
             System.out.println(CONST_MSG_ERROR_PASS);
-        }   else if (USER_PASSWORD == pass) {
+        }   else if (pass.equals(USER_PASSWORD)) {
             System.out.println(CONST_MSG_ERROR_NAME);
         }   else {
             System.out.println(CONST_MSG_ERROR_INPUT);
