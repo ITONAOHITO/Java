@@ -1,5 +1,5 @@
 package service;
- 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,13 +10,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import bean.EmployeeBean;
- 
+
 /**
  * ・社員情報検索サービス
  */
- 
+
 public class EmployeeService {
- 
+
   // 問① 接続情報を記述してください
  /** ドライバーのクラス名 */
  private static final String POSTGRES_DRIVER = "org.postgresql.Driver";
@@ -28,42 +28,42 @@ public class EmployeeService {
  private static final String PASS = "postgres";
  /** ・タイムフォーマット */
  private static final String TIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
- 
+
   // 問② 入力された値で、UPDATEする文
  /** ・SQL UPDATE文 */
  private static final String SQL_UPDATE = "update employee_table set login_time = ? where id = ?";
- 
+
   // 問③ 入力されたIDとPassWordをキーにして、検索するSELECT文
  /** ・SQL SELECT文 */
  private static final String SQL_SELECT = "select name, comment, login_time from employee_table where id = ? and password = ?";
- 
+
  EmployeeBean employeeDate = null;
- 
+
   // 送信されたIDとPassWordを元に社員情報を検索するためのメソッド
  public EmployeeBean search(String id, String password) {
- 
+
  Connection connection = null;
  Statement statement = null;
  ResultSet resultSet = null;
  PreparedStatement preparedStatement = null;
- 
+
  try {
   // データベースに接続
  Class.forName(POSTGRES_DRIVER);
  connection = DriverManager.getConnection(JDBC_CONNECTION, USER, PASS);
  statement = connection.createStatement();
- 
+
   // 処理が流れた時間をフォーマットに合わせて生成
  Calendar cal = Calendar.getInstance();
  SimpleDateFormat sdFormat = new SimpleDateFormat(TIME_FORMAT);
- 
+
   // PreparedStatementで使用するため、String型に変換
  String login_time = sdFormat.format(cal.getTime());
- 
+
  /*
  * 任意のユーザーのログインタイムを更新できるように、プリペアドステートメントを記述。
  */
- 
+
   // preparedStatementに実行したいSQLを格納
  preparedStatement = connection.prepareStatement(SQL_UPDATE);
   // 問④ preparedStatementを使って、一番目のindexに今の時間をセットしてください。2番目のindexにIDをセットしてください。
@@ -81,31 +81,31 @@ public class EmployeeService {
  preparedStatement.setString(2, password);
   // SQLを実行。実行した結果をresultSetに格納。
  resultSet = preparedStatement.executeQuery();
- 
+
  while (resultSet.next()) {
   // 問⑦ tmpName,tmpComment,tmpLoginTimeに適当な値を入れてください。
  String tmpName = resultSet.getString("name");
  String tmpComment = resultSet.getString("comment");
  String tmpLoginTime = resultSet.getString("login_time");
- 
+
   // 問⑧ EmployeeBeanに取得したデータを入れてください。
  employeeDate = new EmployeeBean();
  employeeDate.setName(tmpName);
  employeeDate.setComment(tmpComment);
  employeeDate.setLogin_Time(tmpLoginTime);
  }
- 
+
   // forName()で例外発生
  } catch (ClassNotFoundException e) {
  e.printStackTrace();
- 
+
   // getConnection()、createStatement()、executeQuery()で例外発生
  } catch (SQLException e) {
  e.printStackTrace();
- 
+
  } finally {
  try {
- 
+
  if (resultSet != null) {
  resultSet.close();
  }
@@ -115,7 +115,7 @@ public class EmployeeService {
  if (connection != null) {
  connection.close();
  }
- 
+
  } catch (SQLException e) {
  e.printStackTrace();
  }
